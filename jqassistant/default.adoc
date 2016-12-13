@@ -1,0 +1,6 @@
+= jQAssistant Rules
+
+[[default]]
+[role=group,includesGroups="angularjs:Default"]
+== Default Rules
+

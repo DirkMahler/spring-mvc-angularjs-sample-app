@@ -1,0 +1,78 @@
+[[angularjs:Default]]
+[role=group,includesConcepts="angularjs:Dependency.graphml"]
+== AngularJS
+
+[[angularjs:Dependency.graphml]]
+.Create DEPENDS_ON relations between controllers, services and filters and reports them as GraphML document.
+[source,cypher,role=concept,requiresConcepts="angularjs:Controller,angularjs:Service,angularjs:Filter"]
+----
+MATCH
+  (declarationCall)-[:arguments]->(nameArgument:LiteralStringExpression),
+  (declarationCall)-[:arguments]->(:ArrayExpression)-[:elements]->(arrayElements:List),
+  (arrayElements)-[]->(function:FunctionExpression:AngularJS),
+  (arrayElements)-[]->(dependencyName:LiteralStringExpression)
+MERGE
+  (dependency:AngularJS { name : dependencyName.value })
+MERGE
+  (function)-[declares:DECLARES_DEPENDENCY]->(dependency)
+RETURN
+  function, declares, dependency
+----
+
+[[angularjs:Controller]]
+.Labels all controller functions as "AngularJS" and "Controller"
+[source,cypher,role=concept]
+----
+MATCH
+  (callee)<-[:callee]-(declarationCall:CallExpression),
+  (declarationCall)-[:arguments]->(nameArgument:LiteralStringExpression),
+  (declarationCall)-[:arguments]->(:ArrayExpression)-[:elements]->(arrayElements:List),
+  (arrayElements)-[]->(function:FunctionExpression)
+WHERE
+  callee.property = "controller"
+SET
+  function:AngularJS:Controller
+SET
+  function.name = nameArgument.value
+RETURN
+  function.name
+----
+
+[[angularjs:Service]]
+.Labels all service functions as "AngularJS" and "Service"
+[source,cypher,role=concept]
+----
+MATCH
+  (callee)<-[:callee]-(declarationCall:CallExpression),
+  (declarationCall)-[:arguments]->(nameArgument:LiteralStringExpression),
+  (declarationCall)-[:arguments]->(:ArrayExpression)-[:elements]->(arrayElements:List),
+  (arrayElements)-[]->(function:FunctionExpression)
+WHERE
+  callee.property = "service"
+SET
+  function:AngularJS:Service
+SET
+  function.name = nameArgument.value
+RETURN
+  function.name
+----
+
+[[angularjs:Filter]]
+.Labels all filter functions as "AngularJS" and "Filter"
+[source,cypher,role=concept]
+----
+MATCH
+  (callee)<-[:callee]-(declarationCall:CallExpression),
+  (declarationCall)-[:arguments]->(nameArgument:LiteralStringExpression),
+  (declarationCall)-[:arguments]->(:ArrayExpression)-[:elements]->(arrayElements:List),
+  (arrayElements)-[]->(function:FunctionExpression)
+WHERE
+  callee.property = "filter"
+SET
+  function:AngularJS:Filter
+SET
+  function.name = nameArgument.value
+RETURN
+  function.name
+----
+

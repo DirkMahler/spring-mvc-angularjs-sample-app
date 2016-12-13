@@ -224,10 +224,18 @@
                                     <path>${project.basedir}/src/main/webapp</path>
                                 </scanInclude>
                             </scanIncludes>
+                            <reportProperties>
+                                <graphml.report.directory>${project.build.directory}/graphml</graphml.report.directory>
+                            </reportProperties>
                         </configuration>
                     </execution>
                 </executions>
                 <dependencies>
+                    <dependency>
+                        <groupId>com.buschmais.jqassistant.plugin</groupId>
+                        <artifactId>jqassistant.plugin.graphml</artifactId>
+                        <version>${jqassistant.version}</version>
+                    </dependency>
                     <dependency>
                         <groupId>hu.bme.mit.codemodel</groupId>
                         <artifactId>rifle-jqassistant-plugin</artifactId>
